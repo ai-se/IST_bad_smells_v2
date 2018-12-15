@@ -6,6 +6,7 @@
 \usepackage{pgffor}
 \usepackage{times}
 \usepackage{silence}
+\usepackage{varioref}
 \usepackage{rotating}
 \usepackage{wrapfig}
 \usepackage{amssymb}
@@ -42,10 +43,24 @@
     bookmarks=true 
 }
 
+\newcommand{\RED}{\color{red}}
+\newcommand{\BLACK}{\color{black}}
 
 \journal{Information \& Software Technology}
 
 \newcounter{cntr}
+
+\newcommand{\respto}[1]{
+\fcolorbox{black}{black!15}{
+\label{response:#1}
+\bf\scriptsize R-{#1}}
+}
+
+\newcommand{\citeresp}[1]{
+{\bf (see } \fcolorbox{black}{black!15}{
+ \bf
+  \scriptsize R-{#1}}~{\bf{on page \pageref{response:#1})}}
+}
 
 \begin{document}
 \begin{frontmatter}
@@ -60,11 +75,11 @@
 
 
 \begin{abstract}
-CONTEXT: There has been a rapid growth in the use of data analytics to underpin evidence-based software engineering.  However the combination of complex techniques, diverse reporting standards and poorly understood underlying phenomena are causing some concern as to the reliability of studies.\newline
+CONTEXT:  There has been a rapid growth in the use of data analytics to underpin evidence-based software engineering.  However the combination of complex techniques, diverse reporting standards and poorly understood underlying phenomena are causing some concern as to the reliability of studies.\newline
 OBJECTIVE: Our goal is to provide guidance for producers and consumers of software analytics studies (computational experiments and correlation studies).\newline
 METHOD: We propose using ``bad smells", i.e., surface indications of deeper problems and popular in the agile software community and consider how they may be manifest in software analytics studies.\newline
-RESULTS: We provide a list of 11 ``bad smells" in software analytics papers (and show their impact by examples).\newline
-CONCLUSIONS: We should encourage more debate on what constitutes a ``valid'' study (so we expect our list will mature over time).
+RESULTS: We provide a list of 12 ``bad smells" in software analytics papers (and show their impact by examples).\newline 
+CONCLUSIONS: We should encourage more debate on what  \RED contributes to validity \BLACK  (so we expect our list will mature over time).
 \end{abstract}
 
 %\keywords{Bad smells, Best practices, Empirical research, Experiments.}
@@ -81,7 +96,7 @@ CONCLUSIONS: We should encourage more debate on what constitutes a ``valid'' stu
 \noindent
 The drive to establish software engineering as an evidence-based discipline has been gaining momentum since the seminal article of Kitchenham et al.~\cite{Kitc04}.  In parallel there has been a massive growth in the amount of publicly available software data and sophisticated data analytics methods.  This has resulted in a sharp increase in the number and reach of empirically based, data driven studies that are generally termed software analytics.
 
-Typically software analytics studies seek to distill large amounts of low-value data into small chunks of very high-value information. Studies are more data-driven than theory-driven.  For example, after examining many software projects, certain coding styles could be seen to be more bug prone.  Follow up experimentation, by manipulating the coding styles, could lead us to believe there is causality. Hence we might recommend some coding styles should be avoided (subject to various context-related caveats). 
+Typically software analytics studies seek to distill large amounts of low-value data into small chunks of very high-value information. Studies are more data-driven than theory-driven.  For example, after examining many software projects, certain coding styles could be seen to be more bug prone.  Follow up experimentation, by manipulating the coding styles, could lead us to believe there is causality. Hence we might recommend some coding styles should be avoided (subject to various context-related caveats). \RED However, absence of theory can lead to challenges.  In particular, the lack of strong prior beliefs may make it difficult to choose between or evaluate potentially millions of possibilities \cite{Gust93,Deva16}.  \BLACK
 
 % XXXX should be read in context of other how to statements 
 
@@ -96,7 +111,36 @@ Typically software analytics studies seek to distill large amounts of low-value 
 
 %Each year, the authors of this articles review many software science articles (the actual number varies but a common range is between 50 to 200). This article lists the ``bad smells'' that increase the odds that these authors might reject a article. Each bad small is an example of a missing, but expected, feature.
 
-Thus far, so good.  Unfortunately, concerns are being expressed about the reliability of many of these results both from within software engineering (SE) \cite{Shep14,Jorg16} and more widely from other experimental and data driven disciplines such as the bio-medical sciences \cite{Ioan05,Earp15}.  This has reached the point that in experimental psychology researchers now refer to the ``replication crisis''. Arguably the situation is not too dissimilar in software engineering, so for example, in 2012 we published an editorial for a Special Issue in the journal \textit{Empirical Software Engineering} on repeatable results in software engineering prediction \cite{menzies12} where the principal focus was ``conclusion instability".  In that editorial, we raised concerns about the numerous occasions where Study 1 concluded X yet Study~2 concluded $\neg$X.  The inability to resolve these seeming contradictions leaves us at an impasse.  Clearly, we need better ways to conduct and report our work, as well as to examine the work of others.
+\begin{table}
+\caption{Software Analytics Bad Smells Summary}
+\scriptsize
+\begin{center}
+\begin{tabular}{|r|p{1.7cm}|p{2.3cm}|p{2.5cm}|p{3cm}|}
+\hline
+\rowcolor{gray!50}  & \textbf{``Bad smell"} & \textbf{Underlying problem} & \textbf{Impact} & \textbf{Remedy} \\
+\hline
+1 & Not interesting & The software analytics equivalent of how ``many angels can dance on a pinhead''. & Research that has negligible software engineering impact & Dialogue with practitioners \cite{Bege14,Lo2015,Ivar11} \\
+\rowcolor{gray!50}2 & Not using related work & Unawareness of related work on (i) the research question and/or (ii) state of the art in relevant techniques & (i) Unwitting duplication (ii) Not using state of the art methods (iii) Using unchallenging / outdated benchmarks & Read! Utilize systematic reviews whenever possible. Utilize technical guidance on data analytics methods and statistical analysis. Speak to experts. \\
+3 & Using deprecated or suspect data e.g., $D$ has been widely used in the past ... & Using data for convenience rather than for relevance & Data driven analysis is undermined \cite{agrawal18} & Justify choice of data sets wrt the research question. \\
+\rowcolor{gray!50}4 & Inadequate
+\newline reporting & Partial reporting of results e.g., only giving means without measures of dispersion and/or incomplete description of algorithms & (i) Study is not reproducible \cite{Made17} (ii) meta-analysis is difficult or impossible. & Provide scripts / code as well as data. Provide raw results \cite{Good16,Muna17}. \\
+5 & Under-powered experiments & Small effect sizes and little or no underlying theory & Under-powered studies lead to over-estimation of effect sizes and replication problems & Analyse power in advance. Be wary of searching for small effect sizes, avoid Harking and p-hacking \cite{Butt13,Jorg16,Muna17}.\\
+\rowcolor{gray!50}6 & $p<0.05$ and all that! & Over-reliance on, or abuse of, null hypothesis significance testing & A focus on statistical significance rather than effect sizes leading to vulnerability to questionable research practices and selective reporting \cite{Jorg16} & Report effect sizes and confidence limits \cite{Elli10,Lake14}. \\
+7  & Assumptions of normality and equal variances in statistical analysis & Impact of heteroscedasticity and outliers e.g., heavy tails ignored.  Assumptions of test ignored.  & Under-powered studies lead to over-estimation of effect sizes and replication problems. & Use robust statistics / involve statistical experts \cite{Kitc02,Wilc12}.\\
+\rowcolor{gray!50}8 & Not exploring stability.  Only reporting best or averaged results. & No sensitivity analysis. p-hacking & The impact of small measurement errors and small changes to the input data are unknown but potentially substantial.  This is particularly acute for complex models and analyses. & Undertake sensitivity analysis or bootstraps/randomisation and minimally report all results and variances \cite{Manl97,Salt00}.\\
+9 & No data visualisation & Simple summary statistics e.g., means and medians may hide underlying problems or unusual patterns. & Data are misinterpreted and anomalies missed. & Explore simple visualisations for the benefit of the analyst and the reader \cite{Mya09,Heal18}.\\
+\rowcolor{gray!50}
+10 & Not tuning & Biased comparisons e.g., some models / learners tuned and others not. Non-reporting of the tuning effort / expertise required. & Under-estimation of the performance of un-tuned predictors. & Read and use technical guidance on data analytics methods and statistical analysis \cite{Snoe12,fu2016}.  Unless relevant to the research question avoid off-the shelf defaults for sophisticated learners.\\
+11 & Not exploring simplicity & Excessively complex models, particularly with respect to sample size  & Dangers of over-fitting & Independent validation sets or uncontaminated cross-validation \cite{Cawl10}. \\
+\rowcolor{gray!50} 
+12 & Not justifying choice of learner & Permuting / recombining learners to make `new' learners in a quest for spurious novelty & Under / non reporting of ``uninteresting results" leading to over-estimates of effect sizes. & Principled generation of research questions and analysis techniques. Full reporting. \\
+\hline
+\end{tabular}
+\end{center}
+\label{Tab:BadSmells}
+\end{table}%
+
+Thus far, so good.  Unfortunately, concerns are being expressed about the reliability of many of these results both from within software engineering (SE) \cite{Shep14,Jorg16} and more widely from other experimental and data driven disciplines such as the bio-medical sciences \cite{Ioan05,Earp15}.  This has reached the point that in experimental psychology researchers now refer to the ``replication crisis''. Arguably the situation is not too dissimilar in software engineering.  In a major systematic review of SE experiments (1993--2002) Kampenes et al.~\cite{Kamp07} found similar effect sizes being reported to psychology. In 2012 we published an editorial for a Special Issue in the journal \textit{Empirical Software Engineering} on repeatable results in software engineering prediction \cite{menzies12} where the principal focus was ``conclusion instability".  In that editorial, we raised concerns about the numerous occasions where Study 1 concluded X yet Study~2 concluded $\neg$X.  The inability to resolve these seeming contradictions leaves us at an impasse.  Clearly, we need better ways to conduct and report our work, as well as to examine the work of others.
 
 
 % \begin{sidewaystable}
@@ -124,73 +168,59 @@ Thus far, so good.  Unfortunately, concerns are being expressed about the reliab
 % \label{Tab:BadSmells}
 % \end{sidewaystable}%
 
-\begin{table}
-\caption{Software Analytics Bad Smells Summary}
-\scriptsize
-\begin{center}
-\begin{tabular}{|r|p{1.7cm}|p{2.3cm}|p{2.5cm}|p{3cm}|}
-\hline
-\rowcolor{gray!50}  & \textbf{``Bad smell"} & \textbf{Underlying problem} & \textbf{Impact} & \textbf{Remedy} \\
-\hline
-1 & Not interesting & The software analytics equivalent of how ``many angels can dance on a pinhead''. & Research that has negligible software engineering impact & Dialogue with practitioners \cite{Bege14,Lo2015,Ivar11} \\
-\rowcolor{gray!50}2 & Not using related work & Unawareness of related work on (i) the research question and/or (ii) state of the art in relevant techniques & (i) Unwitting duplication (ii) Not using state of the art methods (iii) Using unchallenging / outdated benchmarks & Read! Utilize systematic reviews whenever possible. Utilize technical guidance on data analytics methods and statistical analysis. Speak to experts. \\
-3 & Using deprecated or suspect data e.g., $D$ has been widely used in the past ... & Using data for convenience rather than for relevance & Data driven analysis is undermined \cite{agrawal18} & Justify choice of data sets wrt the research question. \\
-\rowcolor{gray!50}4 & Inadequate
-\newline reporting & Partial reporting of results e.g., only giving means without measures of dispersion and/or incomplete description of algorithms & (i) Study is not reproducible \cite{Made17} (ii) meta-analysis is difficult or impossible. & Provide scripts / code as well as data. Provide raw results \cite{Good16,Muna17}. \\
-5 & Under-powered experiments & Small effect sizes and little or no underlying theory & Under-powered studies lead to over-estimation of effect sizes and replication problems & Analyse power in advance. Be wary of searching for small effect sizes, avoid Harking and p-hacking \cite{Butt13,Jorg16,Muna17}.\\
-\rowcolor{gray!50}6 & $p<0.05$ and all that! & Over-reliance on, or abuse of, null hypothesis significance testing & A focus on statistical significance rather than effect sizes leading to vulnerability to questionable research practices and selective reporting \cite{Jorg16} & Report effect sizes and confidence limits \cite{Elli10,Lake14}. \\
-7  & Assumptions of normality and equal variances in statistical analysis & Impact of heteroscedasticity and outliers e.g., heavy tails ignored.  Assumptions of test ignored.  & Under-powered studies lead to over-estimation of effect sizes and replication problems. & Use robust statistics / involve statistical experts \cite{Kitc02,Wilc12}.\\
-\rowcolor{gray!50}8 & Not exploring stability.  Only reporting best or averaged results. & No sensitivity analysis. p-hacking & The impact of small measurement errors and small changes to the input data are unknown but potentially substantial.  This is particularly acute for complex models and analyses. & Undertake sensitivity analysis or bootstraps/randomisation and minimally report all results and variances \cite{Manl97,Salt00}.\\
-9 & Not tuning & Biased comparisons e.g., some models / learners tuned and others not. Non-reporting of the tuning effort / expertise required. & Under-estimation of the performance of un-tuned predictors. & Read and use technical guidance on data analytics methods and statistical analysis \cite{Snoe12,fu2016}.  Unless it is relevant to the research question avoid off-the shelf defaults for sophisticated learners.\\
-\rowcolor{gray!50} 10 & Not exploring simplicity & Excessively complex models, particularly with respect to sample size  & Dangers of over-fitting & Independent validation sets or uncontaminated cross-validation \cite{Cawl10}. \\
-11 & Not justifying choice of learner & Permuting / recombining learners to make `new' learners in a quest for spurious novelty & Under / non reporting of ``uninteresting results" leading to over-estimates of effect sizes. & Principled generation of research questions and analysis techniques. Full reporting. \\
-\hline
-\end{tabular}
-\end{center}
-\label{Tab:BadSmells}
-\end{table}%
-
 In this article we consider what may be learned from other disciplines and what specific lessons should be applied to improving the reporting of software analytics type studies.  ``Bad smells'' is a term that comes from the agile community. According to Fowler~\cite{beck1999bad}, bad smells (a.k.a.\ code smells) are ``a surface indication that usually corresponds to a deeper problem''.  See Table~\ref{Tab:BadSmells} for a summary of the bad smells identified in this article.
 
 As per Fowler, we say that the ``smells''  listed in this article do not necessarily indicate that the conclusions from the underlying study must be rejected.  However, we believe they raise three areas of potential concern.
 \begin{enumerate}
     \item For the author(s) they reduce the likelihood of publication.
-    \item For the reader they raise red flags concerning the reliability of the results and the validity of the analysis.
+    \item For the reader they raise red flags concerning the reliability of the results \RED (i.e., the consistency) and the validity (i.e., the correctness of the analysis or how well it captures those constructs we believe it represents) \BLACK.
     \item For science, they hinder the opportunities of pooling results, e.g., via meta-analysis and building bodies of knowledge. 
 \end{enumerate}
 So the goal of this article is to identify ``smells'' in order to (i) encourage a wide-ranging community debate on how to make our articles ``stink'' less and (ii) assist in the identification of potential problems and associated remedies.  
 
 Software analytics research is relatively new and growing fast, so much of our advice relates to articles discussing induction from software project data. We discuss problems with software data mining via experiments, quasi-experiments and correlation studies \cite{Shad02} rather than issues relating to e.g., qualitative or ethnographic studies.  Other articles should be consulted for tips and traps relating to qualitative research and experimentation involving human participants, e.g., \cite{stol2016grounded,cruzes2011research,ko2015practical,petersen2015guidelines}.
 
+The remainder of this article is organized as follows. The rest of this section addresses two frequently asked question about this work. Section \ref{Sec:RelWk} explores historical work on writing `good' articles and methodological guidance, coupled with how other data-driven disciplines have addressed experimental reliability concerns.  Next, in Section \ref{Sec:Approach} we describe our approach to identifying ``bad smells''.  This is followed by Section \ref{Sec:BadSmells} that lists some key symptoms or `smells' in approximate order of importance.  Finally, in Section \ref{Sec:Disc} we consider the implications for the future and how we, the research community, might collectively take ownership of these ``smells'', re-prioritise, re-order, add and subtract ``smells''.
+
+
+ 
+ 
 
 \subsection{But is this article necessary?}
 
 First, we address a question sometimes raised by colleagues when we discuss this work. Specifically: is this article necessary? Is not everything here just material that ``everybody knows''?
 
-In reply to this question, we first note that, for decades now, the authors have been members of a large number of conference and journal review panels. Based on that experience, we assert that demonstrably everybody does not know or apply this material. Each year, numerous research articles are rejected for violating the recommendations of this article, or worse still, some slip through the net.  Regrettably, many of those rejections are avoidable. However, many of the issues raised by this article can be repaired before submission -- some with very little effort.
+In reply to this question, we first note that, for decades now, the authors have been members of a large number of conference and journal review panels. Based on that experience, we assert that demonstrably everybody does not know (or at least apply) this material.  Each year, numerous research articles are rejected for violating the recommendations of this article, or worse still, some slip through the net.  Regrettably, many of those rejections are avoidable. However, many of the issues raised by this article can be repaired before submission -- some with very little effort.
 
-These difficulties are compounded by the fact that good practice is not static but moves on.  For example, whilst the statistical education of those engaged in empirical software engineering research is grounded in classical statistics there have been more recent developments in modern statistics such as robust approaches \cite{Kitc17}, use of randomisation and bootstrap \cite{Carp00} and Bayesian techniques \cite{Gelm13}.  Likewise, there are significant and recent developments in machine learning which, sometimes, authors overlook. For example, we have had on occasions to review and reject papers that are some very small delta to an article  one of us wrote in 2007~\cite{menzies07}. Since that paper was written, much has changed\footnote{For example, improved evaluation techniques and experimental design; new problem areas for SE and machine learning (e.g.~\cite{sarkar2015cost});
- novel and insightful new evaluation measures (see Section 5 of~\cite{huang2017supervised} or the multi-objective approaches discussed in~\cite{\cite{nair2018data}}; and  challenging new learners that are so slow that it becomes impractical to reproduce prior results (see the discussion on deep learning in~\cite{fu2017easy}).} so a mere increment on that 2007 paper is unlikely to be a useful contribution or an acceptable publication. 
+These difficulties are compounded by the fact that good practice is not static but moves on.  For example, whilst the statistical education of those engaged in empirical software engineering research is grounded in classical statistics there have been more recent developments in modern statistics such as robust approaches \cite{Kitc17}, use of randomisation and bootstrap \cite{Carp00} and Bayesian techniques \cite{Gelm13}.  Likewise, there are significant and recent developments in machine learning which, sometimes, authors overlook. For example, we have had on occasions to review and reject papers that are some very small delta to an article one of us wrote in 2007~\cite{menzies07}. Since that paper was written, much has changed\footnote{For example, improved evaluation techniques and experimental design; new problem areas for SE and machine learning (e.g.~\cite{sarkar2015cost});
+ novel and insightful new evaluation measures (see Section 5 of~\cite{huang2017supervised} or the multi-objective approaches discussed in~\cite{\cite{nair2018data}}; and challenging new learners that are so slow that it becomes impractical to reproduce prior results (see the discussion on deep learning in~\cite{fu2017easy}).} so a mere increment on that 2007 paper is unlikely to be a useful contribution or an acceptable publication. 
 
 We also observe that, on occasions, we find some reviewers who have the role of gatekeepers to scientific publication, also seem unaware of some, or much of this material.  Thus there exists some research that should not be published, at least in its present form, that is published \cite{Kitc02,Jorg16}.  This harms the progress of science and our ability to construct useful bodies of knowledge relevant to software engineering.
  
 A particularly marginalized group are industrial practitioners trying to get their voice heard in the research literature.  Unless that group knows the established norms of publication, their articles run the risk of rejection. We note that those norms of publication are rarely recorded -- a problem that this article is attempting to solve.  Hence, for all the above reasons, we argue that this article is necessary and useful.
 
-The remainder of this article is organized as follows. Section \ref{Sec:RelWk} explores historical work on writing `good' articles and methodological guidance, coupled with how other data-driven disciplines have addressed experimental reliability concerns.  Next, in Section \ref{Sec:Approach} we describe our approach to identifying `bad smells'.  This is followed by Section \ref{Sec:BadSmells} that lists some key symptoms or `smells' in approximate order of importance.  Finally, in Section \ref{Sec:Disc} we consider the implications for the future and how we, the research community, might collectively take ownership of these ``smells'', re-prioritise, re-order, add and subtract ``smells''.
+\RED \subsection{Should papers be rejected if they have bad smells?}\label{sec:reject}
+
+It is important to stress that this paper is intended as \textit{guidance} for authors  write papers, and not as a checklist of potential reasons-to-reject for reviewers.  Bad smalls are {\em indicative} rather than {\em definitive} proof of a potential issue, hence we stress that {\em their presence alone is not a reason for reviewers to reject a paper}. 
+
+One of the reviewers of this paper was kind enough to expand on this point. They commented (and we agree) that reviewers tend to become overly strict --- to the point where they can reject papers with very interesting ideas --- just because there was one point that did not satisfy certain guidelines.  What must be  appreciated is that reviewers should not just blindly enforce the adoption of all the points raised by this paper. Instead, reviewers need to be sensitive to the context of the study that they are reviewing, as certain bad smells may not be applicable (or may be less relevant).  
+
+Additionally, we wish to avoid adopting a counsel of despair perspective, such that the requirement of a perfection prevent useful, pioneering or relevant research but slightly imperfect research from being published.
+\BLACK
  
 
 \section{Related Work}\label{Sec:RelWk}
  
 Software engineering (SE) researchers have posed the question from time to time: what makes a good article?  Examples are the article by Shaw \cite{Shaw03} back in 2003 and recently revisited by Theisen et al.~\cite{Thei17}.  Shaw stated that one difficulty SE researchers and authors face is that there are no well-developed or agreed guidelines as to how research should be conducted and presented.  Although in the intervening years there has been increasing emphasis placed upon evidence, it is our view that matters have not greatly changed.  She also remarked on the weakness of many articles in terms of their validation and Theisen et al.\ report that, if anything, reviewer expectations have increased.  Potentially, software analytics articles have an advantage here given their empirical basis, however statistical analysis is not always undertaken well as our article will investigate.
 
-There have also been various audits of statistical quality of empirical research \cite{Kitc02} and published guidelines and recommendations regarding the analysis \cite{Kitc02,Wohl12}. The guidelines are particularly welcome since, by and large, software engineers have limited formal training as statisticians.  Note that when researchers do publish methodological guides, those articles tend to have very high citation counts\footnote{The citation counts were extracted from Google Scholar, July 2018.}, for instance:
+There have also been various audits of statistical quality of empirical research \cite{Kitc02} and published guidelines and recommendations regarding the analysis \cite{Kitc02,Wohl12}. The guidelines are particularly welcome since, by and large, software engineers have limited formal training as statisticians.  Note that when researchers do publish methodological guides, those articles tend to have very high citation counts\footnote{The citation counts were extracted from Google Scholar, November 2018.}, for instance:
 \bi
-\item ``Preliminary guidelines for empirical research in software engineering", in \textit{IEEE Transactions on Software Engineering} \cite{Kitc02} (almost 1400 citations since 2002)
-\item ``Benchmarking Classification Models for Software Defect Prediction: A Proposed Framework and Novel Findings'' in \textit{IEEE TSE} 2008~\cite{Lessmann08} (more than 700 citations since 2008).
+\item ``Preliminary guidelines for empirical research in software engineering", in \textit{IEEE Transactions on Software Engineering} \cite{Kitc02} (1430 citations since 2002).
+\item ``Benchmarking Classification Models for Software Defect Prediction: A Proposed Framework and Novel Findings'' in \textit{IEEE TSE} 2008~\cite{Lessmann08} (765 citations since 2008).
 \item
 ``Guidelines for conducting and reporting case study research in software engineering'', 
-  in the \textit{Empirical Software Engineering} journal~\cite{runeson2009guidelines} (more than 2300 citations since 2009).
-\item ``A practical guide for using statistical tests to assess randomized algorithms in software engineering'' at ICSE'11~\cite{Arcuri:2011} (470 citations since 2011).
+  in the \textit{Empirical Software Engineering} journal~\cite{runeson2009guidelines} (2500 citations since 2009).
+\item ``A practical guide for using statistical tests to assess randomized algorithms in software engineering'' at ICSE'11~\cite{Arcuri:2011} (500 citations since 2011).
 \ei
 Why is this so?  We conjecture that researchers in emerging areas of research within SE are keenly aware of a lack of well-established methodological guidance. Hence when they come across any article offering  guidance, they become eager to apply its advice.  To put that another way, it is important to encourage more articles like this one.
 
@@ -215,7 +245,7 @@ Accordingly, this article aims to recruit colleagues to this goal and thereby in
 In order for this article to be effective we aim to be succinct and accessible. Hence, we adopt a  pragmatic approach.  We present a hopefully useful, but not exhaustive, list of problems with software analytics papers. The level of detail is illustrative rather than in depth.  Again in the spirit of brevity and utility we restrict our focus to data driven research so, for example, case studies and experiments involving human participants are excluded.
 
 
-\begin{table}[!b]
+\begin{table}[!t]
 \caption{Cross referencing research area to bad smell }
 \small
 \begin{center}
@@ -243,12 +273,13 @@ the research design & Was the recruitment strategy appropriate? & No human parti
 \label{Tab:Xref}
 \end{table}%
 
+
 Some ``smells" are more self-evident and consequently need relatively little explanation.  In contrast, others are more subtle and therefore we devote more space to illustrating them.  We use examples to help illustrate the smells and their relationship to actual problems.  We do not intend examples in the sense of existence proofs, and in general believe it is invidious to single out individual authors as examples of widespread errors.
 
-The list has been constructed by discussion and debate between the two authors.  We then cross-checked the list (see Table \ref{Tab:Xref}) with a empirical study quality instrument, due to \cite{Dyba08} that has been used when assessing article quality for inclusion within software engineering systematic reviews \cite[chapter 7]{Kitc15}.  By this means we see our list addresses all four areas of quality identified by a standard quality review instrument used within empirical software engineering.  
+The list has been constructed by discussion and debate between the two authors.  We then cross-checked the list (see Table \ref{Tab:Xref}) with an empirical study quality instrument, due to \cite{Dyba08} that has been used when assessing article quality for inclusion within software engineering systematic reviews \cite[chapter 7]{Kitc15}.  By this means we see our list addresses all four areas of quality identified by a standard quality review instrument used within empirical software engineering.  
 
  
-\section{A List of ``Bad Smells''}\label{Sec:BadSmells}
+\section{``Bad Smells'' Unpacked}\label{Sec:BadSmells}
 This section discusses the bad smells listed in Table \ref{Tab:BadSmells}.
 Before beginning, we note that while some of the following ``smells'' are specific to software analytics, others are general to many scientific endeavors.  We include them altogether since they are all important issues about good science and effective scientific communication.
 
@@ -266,9 +297,9 @@ Note that problem of {\em not inspiring} is particularly acute in this era of ma
 
 
 \subsection{Not Using Related Work}
-This issue should not exist. Nevertheless, we know of many articles that do fail to make adequate use of related work. Typically we see the following specific sub-classes of `bad smell'.
+This issue should not exist. Nevertheless, we know of many articles that do fail to make adequate use of related work. Typically we see the following specific sub-classes of ``bad smell''.
 
- {\em The literature review contains no or almost no articles less than ten years old.}  This strongly suggests the research is not state of the art, or is not being compared with state of the art.
+ {\em The literature review contains no or almost no articles less than ten years old.}  \RED Naturally older papers can be hugely important but the absence of any recent contribution would generally be surprising. \BLACK This strongly suggests the research is not state of the art, or is not being compared with state of the art.
 
 {\em The review overlooks relevant, recent systematic literature review(s).}  This strongly suggests that there will be gaps or misconceptions in the way the state of the art is represented.  It may also allow bias to creep in since the authors' previous work may become unduly influential.
 
@@ -364,8 +395,7 @@ does the study consider class imbalance.
 
 
 
-For examples of lightweight literature inspections, see Figure~\ref{fig:s2} and Table~\ref{tbl:survey2} from Agrawal and Menzies~\cite{agrawal18}. Here, the researchers find a research gap in two dozen articles of
-the top-most cited software defect prediction studies that have at least 10 citations per year over the last decade. Specifically, as seen in Figure~\ref{fig:s2}, most articles avoid issues of data imbalance and scoring via multiple criteria.  This finding led Agrawal and Menzies to perform a unique set of experiments that resulted in an ICSE'18 article. 
+For examples of lightweight literature inspections, see Figure~\ref{fig:s2} and Table~\ref{tbl:survey2} from Agrawal and Menzies~\cite{agrawal18}. Here, the researchers found a research gap in two dozen articles of the top-most cited software defect prediction studies that have at least 10 citations per year over the last decade. Specifically, as seen in Figure~\ref{fig:s2}, most articles avoid issues of data imbalance and scoring via multiple criteria.  \RED Of course, research gaps need to be interesting (see Bad Smell #1). \BLACK This finding led Agrawal and Menzies to perform a unique set of experiments that resulted in an ICSE'18 article.  
 
 
 
@@ -381,7 +411,7 @@ In terms of ``smells" or warning signs we suggest researchers be concerned by th
 For example, in the history of
 software test research, the Siemens test suite
 was an important early landmark in creating reproducible research problems. Inspired by that early work, other researchers have take to document other, more complex problems\footnote{e.g. See the Software-artifact Infrastructure Repository at
-\href{http://sir.unl.edu/portal}{sir.unl.edu/portal}.}. Hence, a 2018 paper basing all its conclusions on the   triangle inequality problem
+\href{http://sir.unl.edu/portal}{sir.unl.edu/portal}.}. Hence, a 2018 paper basing all its conclusions on the triangle inequality problem
 from the Siemens suite is deprecated.   Nevertheless tiny problems occasionally offer certain benefits, e.g., tiny problems for the purposes of explaining and debugging algorithms, prior to attempting scale up to much larger problems. 
 \end{itemize}
 
@@ -397,7 +427,7 @@ Here there are two dimensions: completeness and clarity. Problems may be indicat
 \begin{enumerate}
 \item The work cannot be reproduced because the descriptions are too incomplete or high level.  In addition, all materials: data and scripts should be available \cite{Good16,Muna17}.
 \item The work cannot be \textit{exactly} reproduced because some of the algorithms are stochastic and seeds are not provided.  Typical examples are the generation of folds for cross-validation in machine learning and heuristic search algorithms.
-\item It's impossible for the reader to get a sense of what the article is about without reading it in its entirety. Structured abstracts (as per this article) can greatly assist both human readers \cite{Budg11} and text mining algorithms which are beginning to be deployed to assist meta-analysis, e.g., \cite{Szuc17}.
+\item It's impossible for the reader to get a sense of what the article is about without reading it in its entirety. Structured abstracts (as per this article) can greatly assist both human readers \cite{Budg11,4460893,booth1997value} and text mining algorithms which are beginning to be deployed to assist meta-analysis, e.g., \cite{Szuc17}.
 \item Non-significant and post hoc ``uninteresting" results are not reported. This seemingly innocuous behavior, known as reporting bias, can lead to serious over-estimation of effect sizes and harm our ability to build bodies of knowledge via meta-analysis or similar means \cite{Good16,Szuc17}.
 \item Using highly idiosyncratic section headings or article organization.  Typically the following should suffice: introduction, motivation, related work, methods (which divides into data, algorithms, experimental method, and statistical procedures) followed by threats to discussion, threats to validity, conclusion, future work and references.  Simple tables summarising algorithm details, hyper-parameters etc can be invaluable. %XXX do we have an example??
 \item The article uses too many acronyms.  Define terms when they are first used.  If there are many, then consider using a glossary.  %Explain important ideas as they are introduced after they have been used previously.
@@ -410,6 +440,9 @@ Table~\ref{tbl:acm} defines a continuum of research artifacts and results.  Repo
 %years. Meanwhile, always remember that a journey of a thousands miles starts with one small step. To achieve reproduced results, first strive to achieve any of the easier goals shown at left such as research artifacts functional, reusable, or available.  
 For an excellent pragmatic discussion on how to structure your research artifacts in order to enhance reproducibility, see ``Good Enough Practices for Scientific Computing''  \href{http://goo.gl/TD7Cax}{goo.gl/TD7Cax}.
 
+\RED(Aside: Demands for increased reproducibility  must be assessed on pragmatic grounds.
+If a prior study uses tools that are not open source, or tools that are very complex to use, then it is not appropriate
+to demand that subsequent work reproduces the old work. )\label{noreprod} \BLACK
 
 \begin{table}[!t]
 \caption{The artifact continuum flows from left to right. More articles will classified on the right once authors apply more of the methods on the left.  This table presents the badges and definitions defined by the ACM (see \href{https://goo.gl/wVEZGxx}{goo.gl/wVEZGx}).
@@ -462,26 +495,31 @@ Is tuning easy?
 
 %Research questions are a useful research management tool since they  break   the research effort into $N$ portions (one for each research question). They are also a useful writing tool since they mean that the article can be written in $N+1$ parts. The ``+1'' here is  all the setup information that must proceed the answer to the first research research question. Further, research questions can increase the probability of a article getting accepted. For example, it is possible for reviewers to accept a article even if they doubt the results from one research question (just as long as  they like the results from the others). 
 
-A useful typographical device sometimes associated with research questions is the use of results boxes to stress the answers to the questions. Here is the first such result box seen in the software engineering literature (from Zimmermann et al.~\cite{Zimmermann04}, 2004):
+A useful typographical device sometimes associated with research questions is the use of results boxes to stress the answers to the questions. Here is the first such result box seen in the software engineering literature (from Zimmermann et al.~\cite{Zimmermann04}, 2004). Although potentially powerful such summaries need to be carefully constructed to avoid trivial over-simplification.
 
 \centerline{\includegraphics[width=3.5in]{fig/resultbox.png}}
 
-Zeller (personal communication. 2018) comments that ``such result boxes let readers get a gist of the results at a short glance.  This worked pretty well, and has since been adopted frequently; however, as with all summaries, it entails the risk of oversimplifying, which sometimes is criticized by reviewers''. Accordingly, we advise that such summaries need to be carefully constructed.
+%Zeller suggests that ''boxes let readers get a gist of the results at a short glance.  This worked pretty well, and has since been adopted frequently; however, as with all summaries, it entails the risk of oversimplifying, which sometimes is criticized by reviewers''. .
 
 
-\subsection{Under-powered studies}
+\subsection{Under-powered Studies}
 
-The power of an analysis is the probability that a test will reject a false null hypothesis i.e., correctly report a non-zero effect.  It is the complement of $\beta$ or the probability of making a Type II (failing to detect a true effect in favor of the null hypothesis) error, hence power = $1 - \beta$.  So what should $\beta$ be set to?  Traditionally, it has been argued that $\beta=0.8$ \cite{Cohe88} indicating that researchers might consider Type I errors (wrongly rejecting the null hypothesis when in reality there is no effect) as being four times more problematic than Type II errors and therefore needing proportionately more checks. Thus, if significance levels are set at $\alpha=0.05$ then it follows that $\beta = 4\alpha = 0.2$ hence, as required, our power is $1 - \beta = 0.8$.  An important point to appreciate is that we must trade off between Type I and Type II errors and our preferences are somewhat arbitrary.
+The power of an analysis is the probability that a test will reject a false null hypothesis i.e., correctly report a non-zero effect. \RED More generally, it is the ability to find an effect were one to exist.  Power \BLACK is the complement of $\beta$ or the probability of making a Type II (failing to detect a true effect in favour of the null hypothesis, i.e., a false negative) error, hence power = $1 - \beta$.  
+\RED However, there is a tradeoff with the probability of making a Type I error (i.e., a false positive).  At an extreme we could guard against false positives by setting an extremely high threshold of acceptance but the consequence would be an elevated false negative rate.  And of course \textit{vice versa}. \BLACK
 
-Four factors influence power, namely: (i) sample size, (ii) size of the effect being investigated, (iii) the chosen $\alpha$ and (iv) the chosen $\beta$ \cite{Cohe92,Elli10}.  In addition, experimental design can improve power, for example by measuring within participant rather than between participant variance \cite{McCl00}.  
+\RED So what should $\beta$ be set to?  \BLACK Traditionally, it has been argued that power should be 0.8 \cite{Cohe88} indicating that researchers might consider Type I errors (wrongly rejecting the null hypothesis when in reality there is no effect) as being four times more problematic than Type II errors and therefore needing proportionately more checks. Thus, if significance levels are set at $\alpha=0.05$ then it follows that $\beta = 4\alpha = 0.2$ hence, as required, our power is $1 - \beta = 0.8$.  To repeat, the important point is that we must trade off between Type I and Type II errors and our preferences are somewhat arbitrary.
 
-In principle and as many commentators argue, the power of a proposed experiment or investigation might be determined \emph{a priori} \cite{Dyba06}.  One obvious and immediate difficulty is estimating the effect size that is to be investigated.  This is compounded by the problem that there is compelling evidence that we are systematically over-estimating effect sizes due to reporting and publication bias \cite{Jorg16}.  However, the problems of power go beyond merely wasting scientific resources in failing to detect effects that actually exist.  There are two other serious negative consequences.  First is the tendency to over-estimation of measured effect sizes and second, is the elevated probability of false statistically significant findings \cite{Ioan05,Colq14}.  Indeed, it is no exaggeration to state that \textit{low and under-powered studies are the greatest threat to meta-analysis and constructing meaningful bodies of software engineering knowledge} \cite{Butt13}.
+\RED However, what we want the power of a study to be, and what it \textit{actually} is are two different things.  
+\BLACK 
+Four factors influence power, namely: (i) sample size, (ii) the unknown, true size of the effect being investigated, (iii) the chosen $\alpha$ and (iv) the chosen $\beta$ \cite{Cohe92,Elli10}.  In addition, experimental design can improve power, for example by measuring within experimental unit (e.g., via a repeated measures design) rather than between unit variation \cite{McCl00}.  
 
-It is ironic that the success of software analytics research in being able to uncover patterns and effects in large, complex and noisy data sets is also its undoing.  This, coupled with the lack of guiding theory, agreed methods of analysis and excessive researcher degrees of freedom \cite{Silb15,Loke17} results in low-powered studies and a high probability of over-estimating effect sizes that are hard for other researchers to replicate \cite{Ioan05,Shep14,Jorg16}.  As an antidote, we strongly recommend:
+In principle and as many commentators recommend, the power of a proposed experiment or investigation might be determined \emph{a priori} \cite{Dyba06}.  One obvious and immediate difficulty is estimating the effect size that is to be investigated \cite{Maxw08}.  This is compounded by the problem that there is compelling evidence that we are systematically over-estimating effect sizes due to reporting and publication bias \cite{Butt13,Jorg16}.  However, the problems of power go beyond merely wasting scientific resources in failing to detect effects that actually exist.  There are two other serious negative consequences.  First is the tendency of over-estimation of the measured effect sizes and second, is the elevated probability of false statistically significant findings \cite{Ioan05,Colq14}.  Indeed, it is no exaggeration to state that \textit{low and under-powered studies are the greatest threat to meta-analysis and constructing meaningful bodies of software engineering knowledge} \cite{Butt13,Szuc17}.
+
+It is ironic that the success of software analytics research in being able to uncover patterns and effects in large, complex and noisy data sets is also its undoing.  This, coupled with the lack of guiding theory (which makes it difficult to differentiate between ``winner's curse" and some substantive effect\footnote{\RED Huang et al.~\cite{Huan17} describe a parallel situation in genomics where millions of associations can be potentially discovered but the lack of theory means there is little guidance for researchers. \BLACK}), agreed methods of analysis and excessive researcher degrees of freedom \cite{Silb15,Loke17} results in low-powered studies and a high probability of over-estimating effect sizes that are hard for other researchers to replicate \cite{Ioan05,Shep14,Jorg16}.  As an antidote, we strongly recommend:
 
 \begin{enumerate}
 \item Determining in advance the smallest effect size of interest (SESOI) \cite{Lake17}.  This may entail debate with the problem owners, typically practitioners.  It also helps address our ``Bad Smell #1" by reducing the likelihood of conducting research that nobody cares about.
-\item Again, in advance undertake power calculations to determine the likelihood of the study finding an effect of the expected size.  Where possible, i.e., there are relevant previous studies use a bias-corrected pooled estimate \cite{Schm14}.
+\item Again, in advance undertake power calculations to determine the likelihood of the study finding an effect of the expected size.  Where possible, when there are relevant previous studies, use a bias-corrected pooled estimate \cite{Schm14} to help address likely exaggerated estimates.
 \item If the power is low either modify the study design \cite{McCl00}, use a larger sample or investigate a different question.
 \end{enumerate}
 
@@ -492,7 +530,7 @@ The ``smell" associated with this kind of problem can be surprisingly subtle.  H
 \end{quote}
 
 \noindent
-Unfortunately, nothing can be further from the truth.  If the study is under-powered, possibly due to a small sample, then it is extremely probable that the effect is a false positive or a Type I error \cite{Loke17}.  If the study has low power then that is a problem and one that cannot be fixed by small $p$ values, which leads to the next ``bad smell".
+Unfortunately, nothing can be further from the truth.  If the study is under-powered, possibly due to a small sample, then it is extremely probable that the effect is a false positive or a Type I error \cite{Loke17}.  If the study has low power then that is a problem and one that cannot be fixed by hunting for small $p$ values\footnote{\RED The problem that arises from small samples is that the variability will be high and only the studies that by chance obtain a sufficiently low p-value --- and therefore satisfy the acceptance criterion typically $\alpha=0.05$ --- and these will of necessity have exaggerated estimates of the effect. This is sometimes known as the ``winner's curse".  The probability that an observed effect that reaches statistical significance actually reflects the true effect can be computed as $([1 – \beta] \times R) ⁄ ([1− \beta] \times R + \alpha)$ where $(1−\beta)$ is the power, $\beta$ is the Type II error, $\alpha$ is the Type I error and R is the pre-study odds that an investigated effect is truly non-null among all the effects being investigated) \cite{Loke17,Szuc17}. \BLACK }, which leads to the next ``bad smell".
 
 
 \subsection{$p<0.05$ and all that!}
@@ -500,13 +538,14 @@ Unfortunately, nothing can be further from the truth.  If the study is under-pow
 Though widely deprecated~\cite{carver93,Simm11,Colq14},
  null hypothesis significance testing (NHST) persists as the dominant approach to statistical analysis. Hence, the following fictitious\footnote{Since problems with the use of p-values are widely agreed to be endemic \cite{Simm11,Jorg16} we consider it invidious to single out individuals.} examples ``smell bad'':
 \begin{quote}
-    our analysis yields a statistically significant correlation $(r = 0.01;n = 18000;p = 0.049;\alpha = 0.05)$.
+    {\em Our analysis yields a statistically significant correlation $(r = 0.01;n = 18000;p = 0.049;\alpha = 0.05)$.}
 \end{quote}
 
+\noindent
 and
 
 \begin{quote}
-    Table X summarizes the 500 results of applying the ABC inferential test and reveals that 40 are statistically significant at the customary threshold of $\alpha=0.05$.
+    {\em Table X summarizes the 500 results of applying the ABC inferential test and reveals that 40 are statistically significant at the customary threshold of $\alpha=0.05$.}
 \end{quote}
 
 \noindent
@@ -611,10 +650,9 @@ Rows have different ranks if  Cliff's Delta reports more than a small effect dif
 %see Shepperd \& MacDonell~\cite{shepperd12a}; Kampenes~\cite{kampenes07}; and
 %Kocaguneli et al.~\cite{kocharm13}. 
  
- Implementations that use bootstrapping and a non-parametric effect size test (Cliff's Delta) to control its recursive bi-clustering are available as open source packages
-XXX.
+% Implementations that use bootstrapping and a non-parametric effect size test (Cliff's Delta) to control its recursive bi-clustering are available as open source packages XXX.
  %\footnote{Url blinded for review.}%See \href{https://goo.gl/uoj3FL}{goo.gl/uoj3FL}}.  
- That package converts data such as Figure~\ref{bad} into reports like Figure~\ref{fig:sk}. 
+\textbf{CHECK?????}  That package converts data such as Figure~\ref{bad} into reports like Figure~\ref{fig:sk}. 
  
 
 %\begin{enumerate}
@@ -652,15 +690,75 @@ It is now widely appreciated that applying traditional parametric statistics to 
 \item Third, there have been major developments in the area of robust statistics over the past 30 years that are generally more powerful and preferable to non-parametric statistics.  This includes trimming and winsorizing \cite{Hoag83,Kitc17}.
 \end{enumerate}
 
+Since SE data sets can be highly skewed, heavy tailed or both, \RED we recommend performing robust tests for statistical inference. Note that we believe they should be preferred (wherever possible), to non-parametric statistics that are based on ranks. The latter, \BLACK for example the Wilcoxon signed rank procedure can lack power and are problematic in face of many ties \cite{Blai85}.  Kitchenham et al.~\cite{Kitc17} provide useful advice in the context of software engineering and Erceg-Hurn and Mirosevich an accessible general overview \cite{Erce08}.  For an extensive and detailed treatment see \cite{Wilc12}.  
 
-Since SE data sets can be highly skewed, heavy tailed or both, we recommend performing robust tests for statistical inference. By contrast, some non-parametric statistics that are based on ranks, for example the Wilcoxon signed rank procedure can lack power and are problematic in face of many ties \cite{Blai85}.  Kitchenham et al.~\cite{Kitc17} provide useful advice.  For an extensive and detailed treatment see \cite{Wilc12}.  
-
-Another approach is to use non-parametric bootstrapping (see Efron and Tibshirani~\cite[p220-223]{efron93}). Note that  Figure~\ref{fig:sk} was generated with
-such a bootstrap test.  With the advent of powerful computers Monte Carlo and randomization techniques can be very practical alternatives to parametric methods \cite{Manl97}.
+Another approach is to use non-parametric bootstrapping (see Efron and Tibshirani~\cite[p220-223]{efron93}). Note that  Figure~\ref{fig:sk} was generated with such a bootstrap test.  With the advent of powerful computers, Monte Carlo and randomization techniques can be very practical alternatives to parametric methods \cite{Manl97}.
 %For example, in the general case, bootstrapping can be slow but when used inside a Scott-Knott procedure, it is only called $log_2(N)$ times.  Further computational speed-ups can be achieved by only calling Scott-Knott if the distributions pass an effect size test.
 
+\subsection{No Data Visualisation}\label{sec:viz}
 
- 
+Whilst its customary to describe the data with a few summary statistics such as means, medians and quartiles this does not necessarily provide a check against unusual patterns and anomalies. \RED
+Hence, we strongly advise {\em visualizing the data} first before {\em applying statistical tests}. 
+For example:
+\bi
+\item
+The horizontal box plots of  Figure~\ref{fig:sk} can  present results from a very large number of samples in just one line.
+A visual inspection of that data lets an analyst check if their conclusions are refutable due to (e.g.) large outliers or large variance.
+\item
+For another example, consider Figure~\ref{fig:irqs}  that shows results from a 5*5-cross validation experiment 
+exploring the value of   SMOTE:
+\bi
+\item
+SMOTE is a data rebalancing technique that adjusts training
+data such no class is a small minority~\cite{agrawal18}.
+\item
+A 5*5 cross-val experiment is an evaluation technique where $M=$ times, we randomize order of data. Each time
+divide the project data into $N$ bins, train on $N−1$ bins, test on the hold out (this is repeated for all bins). This procedure produces 25 results which in Figure~\ref{fig:irqs} are reported as the
+medians and their intra-quartile range (the gap between the 75th and 25th percentile).
+\ei
+From this visual inspection,
+before doing any statistics, we can infer that in no case is using SMOTE that otherwise. Also, as seen in the right-hand-side results of Figure~\ref{fig:irqs} ,
+sometimes there   are some very large improvements seen after applying SMOTE. 
+\ei
+\BLACK
+\begin{figure}[!b]
+\begin{center}
+\includegraphics[width=4in]{fig/pic02.png}
+\end{center}
+\caption{\RED Effects of SMOTEing  while   text mining  25 SE data sets.  In this figure, the data sets on the x-axis are sorted by the size of the different between using and not using SMOTE.
+  Medians and IQRs shown as solid and dashed lines, respectively (recall that the medians are the 50th percentile result
+and the IQRs are the (75-25)th percentile). From~\cite{Krishna2016TheP}.
+\BLACK}\label{fig:irqs}
+\end{figure}
+
+\subsection{Not Exploring Stability}
+
+For many reasons, software engineering data sets often exhibit large variances~\cite{menzies12}. So it is important to check if the effect you want to report actually exists, or is just due to noise. Hence:
+
+\begin{itemize}
+\item When multiple data sets are available, try many data sets.
+\item Report measures of central tendency (e.g., median) \textit{and} dispersion (e.g., standard deviation or interquartile range (IQR) (75th-25th percentile).
+\item Do not just average results across N data sets. Instead, summarize the \textit{spread} of results across your data sets which might include the creative use of graphics e.g. 
+\RED see Figure~\ref{fig:irqs} above \BLACK. Recall
+in that figure that the dashed lines at bottom
+report the variability in the 25 results shown for each
+data set in that figure. The key point here is that this
+variability is very small; i.e.  differences between the median results is often much larger than the variability introduced by a stochastic selection of the train set (but, of course, that visual impressions requires a sanity check-- which is the role of 
+statistical tests). Meta-analysis is extremely difficult without dispersion statistics for the results.
+\item If exploring only one data set, then repeat the analysis perhaps 20 to 30 times (and then explore the distributions generated this way with a bootstrap procedure i.e., sampling with replacement). %XXX
+\item Temporal validation: given data divided into some time series (e.g., different versions of the same project) then train on past data and test on future data. Our recommendation here is to keep the size of the future test set constant; e.g., train on software versions $K_{-2,-1}$, then test on version $K$.  Such validation enhances realism and is likely to be far more interesting to the intended users of the research.
+\item Cross-project validation: train on another project data, then test on the project. Note that such cross-project transfer learning can get somewhat complex when the projects use data with different attribute names.
+\item Within-project validation (also called ``cross-validation''): divide the project data into $N$ bins, train on $N-1$ bins, test on the hold out. Repeat for all bins.  
+\end{itemize}
+
+%An important note for reproducibility: when doing any stochastic processing, keep the seed used to initialize the random number generator so that the analysis can be repeated.
+
+Note that, temporal validation (and leave-one-out cross-validation LOOCV) do not produce a range of results since the target is always fixed. However, cross- and within-validations produce distributions of results and so must be analyzed with appropriately so that both measures of central tendency (e.g., mean or median) and dispersion (e.g. variance or IQR) are reported. As a generally accepted rule, in order to obtain, say,  \RED 25 samples of cross-project learning, select
+ 90\% of the data, at random,
+ 25 times. 
+ \BLACK And to obtain, say, 25 samples of within-project learning, $M=5$ times shuffle the order of the data and for each shuffle, and run $N=5$ cross-validation.  Caveat: for small data sets under, say, 60 items, use $M,N=8,3$ (since $8 \times 3 \approx 25$).
+
+
 \subsection{Not Tuning}
 
 Many machine learners, including data miners, have poorly chosen defaults~\cite{van2017automatic, herodotou2011starfish, fu2016, tantithamthavorn2016automated, agrawal16, agrawal18}.  Numerous recent results show that the default control settings for data miners are far from optimal. For example, when performing defect prediction, various groups report that tuning can find new settings that dramatically improve the performance of the learned mode~\cite{fu2016, tantithamthavorn2016automated,tantithamthavorn2018impact}. As a specific of that tuning, consider the standard method for computing the distance between rows $x$ and $y$ (where each row contains $i$ variables):
@@ -679,31 +777,14 @@ Rather than using ``grid search'', we recommend very simple optimizers (such as 
 \href{http://jmetal.sourceforge.net}{jmetal.sourceforge.net}} or DEAP\footnote{\href{http://github.com/DEAP/deap}{github.com/DEAP/deap}}.
 
 
-\subsection{Not Exploring Stability}
-
-For many reasons, software engineering data sets often exhibit large variances~\cite{menzies12}. So it is important to check if the effect you want to report actually exists, or is just due to noise. Hence:
-
-\begin{itemize}
-\item When multiple data sets are available, try many data sets.
-\item Report measures of central tendency (e.g., median) \textit{and} dispersion (e.g., standard deviation or interquartile range (IQR) (75th-25th percentile).
-\item Do not just average results across N data sets. Instead, summarize the \textit{spread} of results across your data sets which might include the creative use of graphics e.g., see Figure~2 of \cite{fu2017}.  Meta-analysis is extremely difficult without dispersion statistics for the results.
-\item If exploring only one data set, then repeat the analysis perhaps 20 to 30 times (and then explore the distributions generated this way with a bootstrap procedure i.e., sampling with replacement). %XXX
-\item Temporal validation: given data divided into some time series (e.g., different versions of the same project) then train on past data and test on future data. Our recommendation here is to keep the size of the future test set constant; e.g., train on software versions $K_{-2,-1}$, then test on version $K$.  Such validation enhances realism and is likely to be far more interesting to the intended users of the research.
-\item Cross-project validation: train on another project data, then test on the project. Note that such cross-project transfer learning can get somewhat complex when the projects use data with different attribute names.
-\item Within-project validation (also called ``cross-validation''): divide the project data into $N$ bins, train on $N-1$ bins, test on the hold out. Repeat for all bins.  
-\end{itemize}
-
-%An important note for reproducibility: when doing any stochastic processing, keep the seed used to initialize the random number generator so that the analysis can be repeated.
-
-Note that, temporal validation (and leave-one-out cross-validation LOOCV) do not produce a range of results since the target is always fixed. However, cross- and within-validations produce distributions of results and so must be analyzed with appropriately so that both measures of central tendency (e.g., mean or median) and dispersion (e.g. variance or IQR) are reported. As a generally accepted rule, in order to obtain, say, 25 samples of cross-project learning, apply the 90\% sample method 25 times. And to obtain, say, 25 samples of within-project learning, $M=5$ times shuffle the order of the data and for each shuffle, and run $N=5$ cross-validation.  Caveat: for small data sets under, say, 60 items, use $M,N=8,3$ (since $8 \times 3 \approx 25$).
-
-
  
-\subsection{Not Exploring Simplicity}
+\subsection{Not Exploring Simplicity}\label{sec:simple} 
 
-One interesting, and humbling, aspect of using Scott-Knott tests is that, often, dozens of treatments can be grouped together into just a few ranks. For example, in the Scott-Knott results of~\cite{ghotra2015}, 32 learners were divided into only four groups.  This means that (a)~many learning methods produce equivalent (in a practical sense) results and (b)~we should stop fussing about minor differences between data mining results since, in the grand scheme of things, the overall structure of the SE data only supports a few conclusions.%  (c)~SE data mining need not always be so hard. 
+One interesting, and humbling, aspect of using Scott-Knott tests is that, often, dozens of treatments can be grouped together into just a few ranks. For example, in the Scott-Knott results of~\cite{ghotra2015}, 32 learners were divided into only four groups. 
+% % This means that (a)~many learning methods produce equivalent (in a practical sense) results and (b)~we should stop fussing about minor differences between data mining results since, in the grand scheme of things, the overall structure of the SE data only supports a few conclusions.%  (c)~SE data mining need not always be so hard. 
 
-For further evidence simple models for some SE tasks can fare well, see~\cite{hindle2012,hellendoorn2017,fu2017easy}.  This may be because elaborate models in highly noisy and multi-variate environments can be vulnerable to over-fitting. That said, it is surprising to report that in the SE literature there are very many complex solutions to very many problems.  We {\em strongly} advocate comparing a seemingly sophisticated method against some simpler alternative. Be aware that such comparisons can be very sobering. Often when we code and test the seemingly na\"{\i}ve method, we find it has some redeeming feature that makes us abandon the more complex methods~\cite{chen2018, fu2017, krishna18a}.  Moreover, the more parsimonious our models, the less prone to overfitting \cite{Hawk04}.
+% For further evidence simple models for some SE tasks can fare well, see~\cite{hindle2012,hellendoorn2017,fu2017easy}.  This may be because elaborate models in highly noisy and multi-variate environments can be vulnerable to over-fitting. That said, it is surprising to report that in the SE literature there are very many complex solutions to very many problems.  
+While not all problems succumb to simple approaches, it is wise to compare a seemingly sophisticated method against some simpler alternative. Be aware that such comparisons can sometimes be very sobering.  Often when we code and test the seemingly na\"{\i}ve method, we find it has some redeeming feature that makes us abandon the more complex methods~\cite{chen2018, fu2017, krishna18a}.   Moreover, the more parsimonious our models, the less prone to overfitting \cite{Hawk04}.
  
 This plea, to explore simplicity, is particularly important in the current research climate that is often focused on  Deep Learning that can be a very slow method indeed~\cite{fu2017easy}. Deep Learning is inherently better for problems that have highly intricate internal structure~\cite{lecun2015deep}. Nevertheless, many SE data sets have very simpler regular structures, so very simple techniques can execute much faster and perform just as well, or better, than Deep Learning. Such faster executions are very useful since they enable easier replication of prior results.
 
@@ -869,10 +950,287 @@ that extend and improve the guidance offered above.
 \noindent
 We extremely grateful to the editor and referees for their detailed and constructive comments.
 
+
+
 \section*{References}
 
 \bibliographystyle{elsarticle-alpha.bst}
 \bibliography{software} 
+
+\newpage
+\section*{Response to Reviewers}
+
+{\bf Thank you for the opportunity to revise this draft. For substantive changes (more than a line or two), we have marked those changes \RED in the text in a red color \BLACK (and for small changes, we mark these below).
+
+We look forward to your comments on this updated draft.}
+
+\subsection*{Associate Editor Comments}
+
+
+{\em Both reviewers confirm the value of providing guidelines on performing software analytics studies. Given the potential impact of such an endeavor, the authors should look into the set of all comments and suggestions given. In particular, please address the following concerns: 
+\bi
+\item  Motivate the paper more strongly, in comparison to existing similar efforts (R1)
+\item  Argue more in terms of objectivity and evidence rather than subjective observation (R1)
+\item Provide more details of the content of Section 4.5 (R1, R2)
+\item Clarify on the meaning of using the term "validity" of studies. (R2)
+\item Consider shortening the article (R2). 
+\ei
+}
+
+{\bf Comment: Thank you for this summary of the open issues. We have addressed these as detailed below. 
+
+Regarding  your request to make this paper shorter, to be honest, this is difficult since most of the changes involve {\bf adding} material.   }
+
+\subsection*{Reviewer1}
+
+{\em 1a This paper provides guidelines on performing software analytics studies and writing software analytics papers. The guidelines are explained based on a set of ``bad smells" on software analytics papers, which should be avoided. Bad smells identified by the authors include not interesting topics, not using related work, using deprecated or suspected data, inadequate reporting, under-powered experiments, over-reliance on p-values, assumptions of normality and equal variances, not exploring stability, not tuning learners, not exploring simplicity and not justifying choice of base learner.
+
+Even though most experienced researchers in the software analytics area will be well aware of most points raised by the authors, several other less experienced researchers may not be. So, I believe that the software analytics community will benefit from this paper. }
+
+{\bf Comment: Thank you for those kind words.}
+
+{\em 
+R1b People (specially reviewers) tend to become overconfident in their knowledge of the topic when reading this type of paper, without realizing that they can't just blindly enforce the adoption of all points raised to all papers. They need to consider the context of the study that they are reviewing (or conducting), as certain points may not be applicable or may be less relevant. They also need to be able to distinguish between opinions, suggestions and important points that must be followed. Reviewers also tend to become overly strict and reject papers with very interesting ideas, just because there was one point that did not satisfy certain guidelines, despite the numeric results clearly pointing out that that point was probably not a big issue.}
+
+{\bf Comment: We agree that the dogmatic adoption of any guidelines is detrimental to the advance of any field.
+With your permission, we want to use a (slightly abridged) version of your comment in the text.
+See \S\vref{sec:reject}.}
+
+{\em In addition to the above, I have the detailed comments below:
+
+R1c:  Can the authors move their focus to evidence? E.g., X\% of papers from workshop Y were rejected with comments related to unsound analysis. It would also be important to argue on the need for this paper, given that there are already other materials such as the authors' editorial notes on conclusion instability, studies on appropriate evaluation metrics, and existing work on topics such as scott-knott, bootstrap, etc.}
+
+{\bf Comment: We are afraid not.  We have seriously considered ``raiding'' the many Easychair conference sites we have worked on for exactly the information you request. But ethical concerns have blocked us since the authors of those papers submitted assuming a certain review process. To gain permission to change the way that data is analyzed,  we would need to contact every author of every paper that was submitted to venue X. We also think we'd need to get permission from the steering committees of those venues. In the end, the logistics defeated us. 
+
+Which means that (a)~we agree with your comment but (b)~regret to say we cannot act on it.}
+
+{\em R1d "everybody does not know or apply this material" --> I find this statement a bit difficult to read. Does it mean that some people do not know, most people do not know, or no one knows or applies this material? It's better to clarify this statement.}
+
+{\bf Comment: We agree. We've shortened it to ``everybody does not know  this material''.
+}
+
+{\em R1e Section 4.2: even though it is always possible to discuss existing work, it is not always possible to perform experiments to compare a given technique against them, due to the lack of open source tools. If a technique is simple and there is no open source, it's ok to ask authors to compare against it. However, it is not ok to enforce authors to perform experiments with complex techniques for which open source tools are not available. It's important to comment on this, so that reviewers don't start rejecting work due to the lack of comparison against those techniques. }
+
+{\bf Comment: Good point.  With your permission, we want to use a (slightly abridged) version of your comment in the text.
+See \S\vref{noreprod}.
+}
+
+{\em R1f  1f Section 4.4, structured abstracts: I am of the opinion that a good writer does not necessarily need to use a structured abstract. He/she would be able to convey the ideas very clearly without labelling them. Was the existing work on the benefits of structured abstracts really conclusive on their usefulness?}
+
+{\bf Comment: Good point-- you are quite correct to highlight a claim we did not adequately defend.  We have added an additional two studies suggesting the merits of structured abstracts~\cite{4460893,booth1997value}.}
+
+{\em R1g Section 4.5: if the reader needs guidance such as some of the simple points mentioned in other sections of this paper, this section is likely to be too heavy for him/her to understand in its current format. And yet, this is a very interesting section with important information. This section should be expanded and explained in more detail. For instance, people who have been adopting stat tests would normally be very familiar with alpha, but not really with beta. How to set beta?}
+
+{\bf Comment: We have slightly extended this section and added more references for the interested reader.  There is also now a paragraph that commences ``So what should $\beta$ be set to? However, we are worried that a fuller exposition would considerably add to the length of the paper but are happy to be guided by the editor on this point.
+}
+
+{\em R1h PS: Type I error is not defined when it is first mentioned in this section. }
+
+{\bf Comment: Thank you.  Definition added.
+}
+
+{\em R1i: Section 4.5, effect size: non-parametric effect size has the "advantage" of being non-parametric. However, it may not reflect the "magnitude" of improvements as wished by practitioners. By magnitude here, I mean that practitioners may be interested in getting an improvement of 20\% in the accuracy. Can the authors provide a discussion on that?}
+
+{\bf Comment: Martin XXX  \RED This puzzles me.  I think it's the final paragraph of what was S4.6 after your text on Scott-Knott.  My instinct is simply to move the whole paragraph to the section on visualisation. \BLACK
+
+In terms of the comment yes we can add a sentence about choosing effect sizes that are meaningful to the problem owner.  I need to think where best to insert this discussion.
+}
+
+{\em R1j: Section 4.5, under-powered studies due to small sample: explain why it is extremely probable that the effect is a false positive. }
+
+{\bf Comment: Although the explanation is a little technical the reviewer is correct to point out it is important.  A FN is added and also an additional reference.}
+
+
+{\em R1k:  Section 4.6: could trimming lead to any negative consequence?}
+
+{\bf Comment: Not usually, see the response to the example given in R1l. We don't think this paper is the best place to give a detailed exposition on robust methods but point to the Kitchenham et al~ 2017 paper and the Wilcox book.
+}
+
+{\em R1l:  A related issue is the use of medians instead of averages. Consider the following two illustrative examples of classification errors:
+
+Group 1: 
+
+0.1, 0.2, 0.3, 0.4, 0.4, 0.4, 0.4, 0.4, 0.4, 0.4
+
+(median = 0.4)
+(IQR = 0.125)
+(average = 0.34)
+
+Group 2:
+
+0.7, 0.6, 0.5, 0.4, 0.4, 0.4, 0.4, 0.4, 0.4, 0.4
+
+(median = 0.4)
+(IQR = 0.125)
+(average = 0.46)
+
+Group 1 should be better than group 2, but median and IQR would overlook that. In some cases, I found that the use of medians and IQR can hide negative aspects of certain approaches. }
+
+{\bf Comment: Thanks for an interesting example, but a median is the most extreme form of trimming possible ie 50\%.  It's customary to do a 10 or 20\% trim.  This yields pairs of trimmed means of (0.3625, 0.4375) and (3.833, 4.167) respectively so the difference isn't obscured.  However visually inspecting the data would also be a wise precaution and your point that we should avoid becoming rule-driven robots when doing analysis is well made!  We also add a new smell concerning data visualisation which also addresses this point.Your point is well made. Any single summary statistic can focus on one aspect of the data and miss others. Hence, the more general point here is we stress that it is important to {\em visualize} the data before applying statistics. We have added more text to that point in (as said in \S\vref{sec:viz})}
+
+{\em And yet, you risk being lynched by certain reviewers for relying on averages.}
+
+{\bf Comment: Indeed, as you say, ``you risk being lynched by certain reviewers for relying on averages''.  That said, one of us (Menzies) reports that in the last 5 years of publishing he has mostly reported medians and never gotten push back on medians-vs-means from reviewers. In the end it's about what's appropriate and our new smell of no data visualisation.   
+}
+
+{\em R1m:  Section 4.8, tuning based on search-based algorithms: the quality of the results obtained by search-based algorithms may vary depending on the learner being optimized. This leads to a threat related to the use of search-based algorithms for tuning when comparing different learners. Conclusions depend on the assumption that the search-based algorithm would be able to tune different learners equally well. This threat can be very serious.}
+
+{\bf Comment: Your point is well taken. What we can say here is that the available evidence is that SBSE
+tuning can dramatically improve classifier performance. These improvements can be so large that it
+would be ill-advised to ignore them. Yet as you say, other optimizers might produce better tuners and better results. FYI- we do not think this is a threat to validity by an exciting area of research. 
+
+A full discussion on this point is a paper in its own right
+(we know this since Menzies has just submitted that paper to EMSE journal: \newline see https://arxiv.org/pdf/1812.01550.pdf).  
+}
+
+
+{\em R1n: Section 4.9, reference to Figure 2 of [32]: could the authors include an illustrative figure in this paper itself? This can be very useful for readers.}
+
+{\bf Comment: Great idea. We found  a very simple example of this (using a different reference)--  please see Figure~\ref{fig:irqs}.}
+
+
+{\em R1o:  Section 4.9, 90\% sample method: clarify what that is.}
+
+{\bf Comment:   We have changed to
+``select
+ 90\% of the data, at random''.}
+
+
+{\em R1p: - Section 4.10, "we should stop fussing about minor differences between data mining results since, in the grand scheme of things, the overall structure of the SE data only supports a few conclusions". This is a too strong statement that seems to be based on a single study on software defect prediction. Do all SE data really support only a few conclusions? I also do not agree with this statement.}
+
+{\bf Comment:   You are quite correct. That statement is not wise in the context
+of this paper. At your advice, we have removed that text (see start of \S\vref{sec:simple}).
+}
+
+{\em R1q:  Section 4.11, choosing techniques to compare against: I'm a bit hesitant on this suggestion. Would people need to run all existing approaches themselves to cluster them and then pick the ones from the top group to compare against the novel proposed approach? If that's the case, they would anyway have to run all existing methods, and could just cluster all of them plus the proposed approach together. Of course, this would lead to the need for a huge amount of experiments, which can be infeasible depending on the study.}
+
+{\bf Comment: (4.11 is now 4.12). We agree that comparing a new method against 
+everything would lead to a impractically large amount of experimentation.
+This is why this paper offers section rules for reducing the larger space of 
+all algorithms to something much less (this is why we  mention
+Table~9 of~\cite{ghotra2015}; and offer the you+two+next+dumb method).
+
+Also, we note in other work we have been exploring the net effort required
+to explore the space of existing methods. We have found many methods to reduce
+that overall load (see~\cite{Fu16,chen2018,AgrawalM17}-- with much success
+(which in this context, means working through the space of methods
+very quickly without having to sample everything).
+}
+
+
+
+\subsection*{Replies to Reviewer2}
+
+{\em 
+I like the overall motivation for this paper: "we raised concerns about the numerous occasions where Study 1 concluded X yet Study 2 concluded ¬X. The inability to resolve these seeming contradictions leaves us at an impasse." I believe the paper will make a contribution towards the stated aim of improving methodological aspects of conducting studies in software analytics.
+
+I list my suggested improvements to the paper below.}
+
+{\bf Comment: Thank your kind words. }
+
+{\em 
+R2a: I miss, at least a brief, discussion on what you mean by validity. You write "'valid' study" in the abstract, that is, valid is in quotes, but then you make it too easy for yourself because it's then unclear what you mean; is it just a sort of valid study, a quasi-valid study, or do you mean valid study? }
+
+{\bf Comment:  Definitions are provided in the introduction when the terms are introduced.  The remark on quasi-valid is fair so the abstract has been slightly re-worded to ``what contributes to validity".
+}
+
+{\em
+
+R2b: Section 4.1: You state that if there is no debate in a certain area, research articles should motivate to such a debate, "For example, one could inspect the current literature and report a gap in the research that requires investigation."). That's fine, but you should stress that even though one finds a gap in the literature it requires a solid motivation for why this gap requires investigation. Far too many systematic literature reviews in software engineering concludes that since there is a gap, that gap requires investigation, without further motivation. It could well be that the area is not interesting, which is the title of this subsection.
+
+}
+
+{\bf Comment: We agree a gap is of itself not necessarily interesting.  The qualification ``Of course, research gaps need to be interesting (see Bad Smell #1)." is added in Section 4.2. }
+
+{\em
+R2c:
+Section 4.2:
+Regarding the problem that "The literature review contains no or almost no articles less than ten years old", I certainly agree, but I believe it's worthwhile to mention that old articles could still be relevant. It's not the case that an article is necessarily poor because it's old. Often old articles survive just because they are good. On the other hand, a few old articles are much cited simply because they for some reason started to become much cited, and then people continue citing them because everybody else does. That's of course a practice that we would like to see stopped. }
+
+{\bf Comment: Agreed.  A qualification ``Naturally older papers can be hugely important but the absence of any recent contribution would generally be surprising." is added to this section.}
+
+{\em
+R2d: Section 4.4. Inadequate Reporting
+Regarding "Consider adding a list of contributions to the introduction", I disagree that this is a good practice. The principle contributions should be clear from the abstract, which should then motivate the reader. The motivation in the introduction should also make the readers interested. If the readers after that are very curious, they can easily jump to the results, discussion or conclusion sections. Articles with contributions in the intro often become verbose and repetitious. BTW, I can't see that you state you follow this recommendation yourself :-). 
+}
+
+\RED {\bf  Comment:  Tim, do you think the reviewer has a point.  A simple way to handle is just to drop this recommendation???? } \BLACK
+
+{\em
+R2e: 
+Section 4.5
+The problem stated is: "Small effect sizes and little or no underlying theory" but you don't discuss theory at all in this section.
+I certainly agree with the problem of absence of an underlying theory, but how does that lead to over-estimation of effect sizes? And how does "Analyse power in advance. Be wary of searching for small effect sizes, avoid Harking and p-hacking. Report effect sizes and confidence limits" remedy lack of underlying theory? I believe lack of underlying or explaining theory should be a separate smell in itself. }
+
+{\bf Comment: Thank you.  You raise some important points here.  \\
+Lack of theory means high false discovery rates and the strong likelihood, (although not certainty), that a true effect will be small because we are just trawling through data rather than have an a priori reason to expect that it exists which will tend to under-power experiments that will therefore lead to upwardly biased effect size estimates.\\
+We see lack of explaining theory as contextual, it makes software analytics studies vulnerable.  But we see generation of theory as lying beyond the scope of our article.  It's really important but would require a lot more discussion.
+However, we provide a brief rationale in the text and a FN describing similar problems in genomics. 
+}
+
+{\em
+R2f:
+You state earlier that "Studies are more data-driven than theory-driven." However, you never really discuss the problem of lack of theory in SE research. Lack of theory, among other things, relates to the problem of shotgun correlations and your smell no 6 (Over-reliance on, or abuse of, null hypothesis significance testing)", that is, spurious results. Theories should be used to explain cause-effects found statistically, see for example Sjøberg, Dag I.K.; Bergersen, Gunnar R. & Dyba, Tore (2016). Why Theory Matters, In Tim Menzies; Laurie Williams & Thomas D. Zimmermann (ed.), Perspectives on Data Science for Software Engineering.  Elsevier.  ISBN 9780128042069.  pp. 29 - 33 and Sjøberg, Dag IK, et al. "Building theories in software engineering." Guide to advanced empirical software engineering. Springer, London, 2008. 312-336. These articles discuss theories with examples from experiments with humans. You could present examples of theories in software analytics that do not involve humans.
+}
+
+{\bf Comment: Thank you for the reference and comment. Unfortunately the article (being part of a book) is behind an MK / Elsevier paywall.  MJS can't access it and at present we think quite a few European colleagues may be in a similar situation.  Therefore we use the Debvanbu et al. paper on Belief \& Evidence instead and also an early paper by Gustafson et al.  Clearly a great deal could be said about the relationship of theory and SE, however we want to keep the paper reasonably focused.\\
+We add a comment on shotgun correlations in what is now Section 4.7 on p<0.05 and a more general remark in the Introduction ``However, absence of theory can lead to challenges.  In particular, the lack of strong prior beliefs may make it difficult to choose between or evaluate potentially millions of possibilities \cite{Gust93,Deva16}".}
+
+{\em
+R2g:
+Furthermore, you write: "In addition, experimental design can improve power, for example by measuring within participant rather than between participant variance [66]." But you state that you do not consider experiments with humans. It would be better to use an example that use the kind of elements that you think of in your experiments. (I suppose a "participant" is a human.)
+}
+
+{\bf Comment: Thanks.  We were thinking repeated measures design or similar.  We now use a more neutral term of experimental unit.}
+
+{\em
+R2h:
+Section 4.7
+The main problem with using nonparametric tests if the data is (close to) normal, is less power than when using a parametric test. You mention that point very briefly. I miss a further discussion on how much the loss of power actually is (the problem of low power is much discussed elsewhere in your paper). I've heard that using a nonparametric test corresponds to throwing away 10\% of the observation, that is, if you have approx. 10\% more observations, you will have the same power. However, I've never seen such a statement in writing, and the size of the lack of power certainly depends on many aspects. Here is an article that makes a comparison in a specific context: https://www.ncbi.nlm.nih.gov/pmc/articles/PMC2743502/.
+}
+
+{\bf Comment: Thanks (and for the reference). This is part of a bigger discussion.  Since non-parametric tests are based on ranks you are right to put out the sometimes considerable loss of power.  This is in part the rationale for robust statistics eg trimmed measures which tend to be superior and sometimes outperform classic parametric methods.  However, it must be stressed that parametric tests \textbf{also} make assumptions regarding homogeneity of the variances.  And while it is widely believed that classic tests are only vulnerable for small samples this turns out not be the case (see \cite{Erce08,Wilc98}). \\
+However, we're more strongly advocating robust statistics.  To make this disctinction clearer we have rewritten the paragraph in Section 4.7\\
+``Since SE data sets can be highly skewed, heavy tailed or both, \RED we recommend performing robust tests for statistical inference. Note that we believe they should be preferred (wherever possible), to non-parametric statistics that are based on ranks. The latter, \BLACK for example the Wilcoxon signed rank procedure can lack power and are problematic in face of many ties \cite{Blai85}.  Kitchenham et al.~\cite{Kitc17} provide useful advice in the context of software engineering and Erceg-Hurn and Mirosevich an accessible general overview \cite{Erce08}.  For an extensive and detailed treatment see \cite{Wilc12}."
+}
+
+{\em
+R2i
+Since you discuss effect size quite a lot (in Smells 5, 6, 7, and 1), you should reference "Kampenes, V. B., Dybå, T., Hannay, J. E., & Sjøberg, D. I. K. (2007). A systematic review of effect size in software engineering experiments. Information and Software Technology, 49(11-12), 1073-1086."
+Since you are concerned about validity, you should also discuss construct validity because one reason for the apparently contradicting results in software engineering (as you state in the beginning) is that people state they measure the same thing, but actually measure different things. If the measurements don't represent the concept ("thing") properly, one may get arbitrary results. It may be the case that the concepts studied are more complex in studies that involve humans, but I believe that concepts and the way they are measured are not always straightforward in software analytics either.
+}
+
+{\bf Comment: We add the Kampenes citation in the set up in Section 1 since as you point out effect size underpins a lot of our discussion.  This comment also relates to your earlier remark r2a.}
+
+{\em
+R2j: 
+Even though you stress that you will make this article succinct and brief, I still find the text relatively verbose. For example, if there is anything new in the last sentence of this paragraph, it could easily be integrated in the sentences above: "The list has been constructed by discussion and debate between the two authors. We then cross-checked the list (see Table 2) with a [typo: an] empirical study quality instrument, due to [25] that has been used when assessing article quality for inclusion within software engineering systematic reviews [49, chapter 7]. By this means we see our list addresses all four areas of quality identified by a standard quality review instrument used within empirical software engineering."
+}
+
+{\bf Comment: We have re-read (and proof checked) the entire paper in order to cut out redundancy and verbosity.  Unfortunately some of the helpful suggestions made by yourselves entail adding to the paper rather than subtracting from it.  So overall it's become slightly longer.  Sorry!  BTW we fixed the typo you mentioned.}
+
+{\em
+R2k: 
+There are many years ago since serious journals abandoned the practice of referring to "private communication". A paper that is supposed to improve reporting standards should not itself refer to such "work", which cannot be obtained or checked by the reader.
+
+}
+
+{\bf Comment: ok, Reference removed.}
+
+{\em
+R2l: 
+Typos: 
+p. 5: "how we the research community"
+p.6 Many of problems -> of the problems
+p. 8 "a article"
+p. 10: "know quality issues" -> known
+p. 18: "are from optimal" -> far from
+
+ref. 48:  "Incorrect esults"
+
+}
+
+{\bf Comment: Fixed.  Thankyou.}
 
 
 \end{document}
